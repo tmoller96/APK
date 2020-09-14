@@ -20,5 +20,16 @@ int main(int argc, char const *argv[])
 
     cout << "Looking for '3'? " << (myfind(arr.begin(), arr.end(), 3) != arr.end() ? "found" : "sry no") << std::endl;
 
+    MyArray<int, 10> intArr;
+    MyArray<double, 10> doubleArr;
+
+    intArr.fill(6);
+    intArr[2] = 10;
+    intArr[9] = 69;
+
+    doubleArr = intArr;
+
+    cout << doubleArr[1] << doubleArr[2] << doubleArr[9] << endl;
+
     return 0;
 }

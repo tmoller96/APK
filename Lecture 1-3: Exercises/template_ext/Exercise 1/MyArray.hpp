@@ -14,6 +14,11 @@ public:
     }
     ~MyArray() {}
 
+    MyArray(const MyArray &arr)
+    {
+        arr = this;
+    }
+
     void fill(const T &value)
     {
         endIndex = 0;
@@ -24,15 +29,9 @@ public:
         }
     }
 
-    T *begin()
-    {
-        return elements;
-    }
+    T *begin() const;
 
-    T *end()
-    {
-        return elements + capacity;
-    }
+    T *end() const;
 
     T &
     operator[](int i)
@@ -45,6 +44,31 @@ public:
         {
             return elements[endIndex];
         }
+    }
+
+    template <typename U, const size_t otherCapacity>
+    MyArray<T, capacity> &operator=(const MyArray<U, otherCapacity> &arr)
+    {
+        if (is_convertible<T, U>::value)
+        {
+            int index = 0;
+            for (U *i = arr.begin(); i != arr.end(); i++)
+            {
+                elements[index++] = *i;
+
+                if (index == endIndex)
+                {
+                    return *this;
+                }
+            }
+        }
+
+        else
+        {
+            cout << "Types cannot be converted" << endl;
+        }
+
+        return *this;
     }
 
     const size_t size()
@@ -65,4 +89,16 @@ T *myfind(T *first, T *last, const U &v)
     }
 
     return last;
+}
+
+template <typename T, const size_t capacity>
+T *MyArray<T, capacity>::begin() const
+{
+    return elements;
+}
+
+template <typename T, const size_t capacity>
+T *MyArray<T, capacity>::end() const
+{
+    return elements + capacity;
 }
