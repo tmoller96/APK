@@ -104,6 +104,8 @@ T* myfind(T* first, T* last, const U& v)
 }
 
 //Pointer specialization
+//Do note that this specialization is not necessarily the best as it 
+
 template<typename T, std::size_t capacity>
 class MyArray<T*, capacity>
 {
@@ -122,7 +124,7 @@ public:
     {
         for(T ** i = begin(); i != end(); ++i) 
         {
-            if(i != nullptr)
+            if(*i != nullptr)
             {
                 delete *i;
             }
@@ -187,7 +189,7 @@ public:
 template<typename T, const std::size_t capacity>
 T ** MyArray<T*,capacity>::begin() const
 {
-    return _array;
+    return &_array[0];
 }
 
 template<typename T, const std::size_t capacity>
@@ -207,7 +209,7 @@ T** myfind(T** first, T** last, const U& v)
 {
     for(T ** i = first; i != last; ++i)
     {
-        if(**i == v)
+        if(*i != nullptr && **i == v)
         {
             return i;
         }

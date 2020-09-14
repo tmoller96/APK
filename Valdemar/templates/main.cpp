@@ -25,8 +25,9 @@ int main()
     // std::cout << myDouble[5] << std::endl;
 
     MyArray<std::string*, 10> myString;
-    std::cout << myString[1] << std::endl;
     myString[5] = new std::string("Hello");
+    myString[0] = new std::string("Beginning");
+    std::cout << **myString.begin() << std::endl;
     std::cout << "Looking for 'Hello '? " << (myfind(myString.begin (), myString.end(),
         std:: string("Hello")) != myString.end()? "found" : "sry no") << std::endl;
 
