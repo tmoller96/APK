@@ -4,19 +4,14 @@ class SharedPtr
 private:
     T* _ptr;
     int* _count;
-    
+    Helper
 public:
-    explicit SharedPtr()
+    explicit SharedPtr() : SharedPtr(nullptr)
     {
 
     }
     explicit SharedPtr(T* t) : _count(new int{1}), _ptr(t)
     {
-    }
-    template<typename T, typename D>
-    SharedPtr(T* t, D d)
-    {
-
     }
     //If this is not set to explicit then the following will compile as Constructor only takes 1 argument
     //void func()
@@ -37,6 +32,11 @@ public:
     {
         (*_count)++;
     } 
+    template<typename T, typename D>
+    SharedPtr(T* t, D d) : _h(new Helper<T, D>(d))
+    {
+        
+    }
     SharedPtr<T>& operator=(const SharedPtr<T>& other)
     {
         if(this != &other)
