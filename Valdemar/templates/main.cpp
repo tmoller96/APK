@@ -13,13 +13,14 @@ int main()
     // std::cout << myArray[5] << std::endl;
     // std::cout << myArray.size() << std::endl;
 
-    // MyArray<int, 15> myInt;
-    // MyArray<double, 20> myDouble;
-    // myInt[10] = 10;
-    // myInt[4] = 22;
-    // myInt[3] = 32;
-    // myInt[1] = 1;
-    // myDouble = myInt;
+    MyArray<int, 15> myInt;
+    MyArray<double, 20> myDouble;
+    myInt[10] = 10;
+    myInt[4] = 22;
+    myInt[3] = 32;
+    myInt[1] = 1;
+    myDouble = myInt;
+    std::cout << myAccumalation(myInt) <<std::endl;
     // std::cout << myInt[10] << std::endl;
     // std::cout << myDouble[4] << std::endl;
     // std::cout << myDouble[5] << std::endl;
@@ -31,4 +32,5 @@ int main()
     std::cout << "Looking for 'Hello '? " << (myfind(myString.begin (), myString.end(),
         std:: string("Hello")) != myString.end()? "found" : "sry no") << std::endl;
 
+    return 0;
 }

@@ -33,6 +33,9 @@ public:
             std::cout << "Unable to convert from " << typeid(U).name() << " to " << typeid(T).name() << std::endl;
         }        
     }
+
+    typedef T value_type;
+
     template<typename U, std::size_t otherCapacity>
     MyArray<T, capacity>& operator=(const MyArray<U, otherCapacity>& rhs)
     {
@@ -104,7 +107,9 @@ T* myfind(T* first, T* last, const U& v)
 }
 
 //Pointer specialization
-//Do note that this specialization is not necessarily the best as it 
+//Do note that this specialization is not necessarily the best as it contains pointers to memory. When you create and insert items into the array, the objects could still be 
+// in use other places in the program when the MyArray class is destructed - resulting in the objects being deallocated, and the program crashing. 
+// This could be solved with a smart pointer implementation
 
 template<typename T, std::size_t capacity>
 class MyArray<T*, capacity>
@@ -115,14 +120,10 @@ public:
    MyArray()
     {
         _array = new T*[capacity];
-        // for(int i = 0; i < 0; ++i) 
-        // {
-
-        // }
     }
     ~MyArray()
     {
-        for(T ** i = begin(); i != end(); ++i) 
+        for(T ** i = begin(); i != end(); ++i)
         {
             if(*i != nullptr)
             {
@@ -217,6 +218,16 @@ T** myfind(T** first, T** last, const U& v)
     return last;
 }
 
+template <typename U>
+typename U::value_type myAccumalation(const U& u)
+{
+    typename U::value_type m = typename U::value_type ();
+    for(auto first : u)
+    {
+        m += first;
+    }
+    return m;
+}
 
 
 
