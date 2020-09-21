@@ -1,6 +1,7 @@
 #include "./MyArray.hpp"
 #include <iostream>
 #include <string>
+#include <iterator>
 int main()
 {
     // MyArray<double, 10> myArray;
@@ -32,5 +33,13 @@ int main()
     std::cout << "Looking for 'Hello '? " << (myfind(myString.begin (), myString.end(),
         std:: string("Hello")) != myString.end()? "found" : "sry no") << std::endl;
 
+    //Test for std:: algorithms
+    std::ostream_iterator<int> ouput(std::cout, " ");
+    MyArrayIterator<int> it1(myInt.begin());
+    MyArrayIterator<int> it2(myInt.end());
+
+    std::cout << "Writing contents of myarray to cout:" << std::endl;
+    std::copy(it1, it2, ouput);
+    
     return 0;
 }

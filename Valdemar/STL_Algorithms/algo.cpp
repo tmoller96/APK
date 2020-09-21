@@ -8,11 +8,11 @@
 #include <iterator>
 
 #include <algorithm>
+#include <assert.h>
 #include <functional>
 #include <numeric>
 #include <string>
 #include <vector>
-#include <assert.h>
 
 #define PRODUCT_DB_FILE "product.db"
 
@@ -52,7 +52,7 @@ std::istream &operator>>(std::istream &i, Product &p)
 {
   return i >> p.name_ >> p.price_ >> p.sold_;
 }
-
+// possible implementation of back_insert
 // template <class Container> class back_insert_iterator
 // {
 
@@ -195,22 +195,27 @@ constexpr const T &clamp(const T &v, const T &lo, const T &hi)
 }
 void addDiscountUsingTransform(ProductList &pl)
 {
-  std::ostream_iterator<Product> output(std::cout);
-  std::transform(pl.begin(), pl.end(), output, [](auto p) {
-    std::istream_iterator<float> discountInput(std::cin);
-    const float discount = ::clamp<float>(
-      *discountInput, 10, 90
-    );
-    return [discount, p]() {
-      p.setPrice(p.price() * (1 - (discount/100)));
+  float discount;
+  std::cin >> discount;
+  auto disc = [](float discount) {
+    return [discount](Product p) {
+      p.setPrice(p.price() * (1 - (discount / 100)));
+      return p;
     };
-  });
+  };
+  std::ostream_iterator<Product> output(std::cout, "\n");
+  std::transform(pl.begin(), pl.end(), output, disc(discount));
 }
 
 /**
  * Calculate the total amount of sold products
  */
-void calcTotalSoldProducts(ProductList &pl) {}
+void calcTotalSoldProducts(ProductList &pl) {
+  unsigned int totalProductsSold = 0;
+  std::cout << "Total products sold: " << std::accumulate(pl.begin(), pl.end(), totalProductsSold, [](unsigned int tempTotal, Product p) {
+    return tempTotal += p.sold();
+  }) << std::endl;
+}
 
 /**
  * Setting discount using bind2nd - OPTIONAL
