@@ -64,8 +64,28 @@ std::ostream &operator<<(std::ostream &o, const Product &p)
 
 std::istream &operator>>(std::istream &i, Product &p)
 {
-  return i >> p.name_ >> p.price_ >> p.sold_;
+  std::cout << "Name: ";
+  i >> p.name_;
+  std::cout << "Price: ";
+  i >> p.price_;
+  std::cout << "Sold: ";
+  return i >> p.sold_;
 }
+
+// Functor
+class discount
+{
+private:
+  float discountDecimal;
+
+public:
+  discount(float n) : discountDecimal(n) {}
+
+  void operator()(Product &p) const
+  {
+    p.setPrice(p.price() * discountDecimal);
+  }
+};
 
 /**
  * Read products from file
@@ -101,6 +121,8 @@ void printAll(const ProductList &pl)
 */
 void addItem(ProductList &pl)
 {
+  std::istream_iterator<Product> inputProduct(std::cin);
+  pl.push_back(*inputProduct);
 }
 
 /**
@@ -108,6 +130,10 @@ void addItem(ProductList &pl)
 */
 void productDBWrite(const ProductList &pl, const std::string &fileName)
 {
+  std::ofstream pFile(fileName.c_str());
+
+  std::ostream_iterator<Product> out_it(pFile);
+  std::copy(pl.begin(), pl.end(), out_it);
 }
 
 /**
@@ -115,6 +141,10 @@ void productDBWrite(const ProductList &pl, const std::string &fileName)
  */
 void printPoorlySellingProducts(const ProductList &pl)
 {
+  std::ostream_iterator<Product> output(std::cout);
+  std::remove_copy_if(pl.begin(), pl.end(), output, [](const Product &p) {
+    return p.sold() > 10;
+  });
 }
 
 /**
@@ -122,6 +152,13 @@ void printPoorlySellingProducts(const ProductList &pl)
  */
 void addDiscountUsingForEach(ProductList &pl)
 {
+  // 1# solution
+  std::for_each(pl.begin(), pl.end(), discount(0.90));
+
+  // 2# solution
+  // std::for_each(pl.begin(), pl.end(), [](Product &p) {
+  //   p.setPrice(p.price() * 0.90);
+  // });
 }
 
 /**
