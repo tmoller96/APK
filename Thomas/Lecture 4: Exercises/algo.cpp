@@ -12,6 +12,7 @@
 #include <functional>
 #include <vector>
 #include <string>
+#include <assert.h>
 
 #define PRODUCT_DB_FILE "product.db"
 
@@ -161,11 +162,35 @@ void addDiscountUsingForEach(ProductList &pl)
   // });
 }
 
+template <class T, class Compare>
+constexpr const T &clamp(const T &v, const T &lo, const T &hi, Compare comp)
+{
+  return assert(!comp(hi, lo)), comp(v, lo) ? lo : comp(hi, v) ? hi : v;
+}
+
+template <class T>
+constexpr const T &clamp(const T &v, const T &lo, const T &hi)
+{
+  return ::clamp(v, lo, hi, std::less<>());
+}
+
 /**
  * Set a discount on all products - Using transform()
  */
 void addDiscountUsingTransform(ProductList &pl)
 {
+  std::ostream_iterator<Product> output(std::cout);
+
+  std::istream_iterator<float> discountInput(std::cin);
+  float discount = ::clamp<float>(*discountInput, 10, 90);
+
+  std::transform(
+      pl.begin(), pl.end(), pl.begin(), [discount](Product &p) {
+        p.setPrice(p.price() * (1 - (discount / 100)));
+        return p;
+      });
+
+  std::copy(pl.begin(), pl.end(), output);
 }
 
 /**
@@ -173,6 +198,11 @@ void addDiscountUsingTransform(ProductList &pl)
  */
 void calcTotalSoldProducts(ProductList &pl)
 {
+  float result = std::accumulate(pl.begin(), pl.end(), 0.0, [](float total, Product &p) {
+    return total += p.price();
+  });
+
+  std::cout << result << std::endl;
 }
 
 /**
