@@ -59,7 +59,7 @@ typedef std::vector<Product> ProductList;
 
 std::ostream &operator<<(std::ostream &o, const Product &p)
 {
-  return o << p.name_ << " " << p.price_ << " " << p.sold_;
+  return o << p.name_ << " " << p.price_ << " " << p.sold_ << std::endl;
 }
 
 std::istream &operator>>(std::istream &i, Product &p)
@@ -89,10 +89,10 @@ void printAll(const ProductList &pl)
   std::cout << "##################################################" << std::endl;
   std::cout << "Printing out all products..." << std::endl;
   std::cout << "----------------------------" << std::endl;
-  for (ProductList::const_iterator iter = pl.begin(); iter != pl.end(); ++iter)
-  {
-    std::cout << *iter << std::endl;
-  }
+
+  std::ostream_iterator<Product> it1(std::cout);
+  std::copy(pl.begin(), pl.end(), it1);
+
   std::cout << "##################################################" << std::endl;
 }
 
